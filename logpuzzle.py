@@ -32,7 +32,10 @@ def read_urls(filename):
     puzzle_urls = puzzle_url_pattern.findall(content)
     # Remove Duplicates
     puzzle_urls = list(set(puzzle_urls))
-    puzzle_urls.sort()
+    if re.search(r'\S*-\S*-(\S*)\.jpg', content):
+        puzzle_urls.sort(key=lambda s: re.findall(r'\S*-\S*-(\S*)\.jpg', s))
+    else:
+        puzzle_urls.sort()
     filepath_pattern = re.compile(r'\S*(code\S*)')
     filepath = filepath_pattern.findall(filename)
     full_path = [
