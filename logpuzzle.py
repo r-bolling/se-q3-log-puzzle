@@ -35,7 +35,9 @@ def read_urls(filename):
     puzzle_urls.sort()
     filepath_pattern = re.compile(r'\S*(code\S*)')
     filepath = filepath_pattern.findall(filename)
-    full_path = [os.path.join(filepath[0], x.strip('/')) for x in puzzle_urls]
+    full_path = [
+        os.path.join('http://', filepath[0], x.strip('/')) for x in puzzle_urls
+        ]
     return full_path
 
 
@@ -48,6 +50,27 @@ def download_images(img_urls, dest_dir):
     Creates the directory if necessary.
     """
     # +++your code here+++
+    if os.path.exists(dest_dir) is False:
+        os.makedirs(dest_dir)
+
+    with open(os.path.join(dest_dir, 'index.html'), 'a') as f:
+        # clear file
+        f.truncate(0)
+        f.write(
+            '<html>\n'
+            '<body>\n'
+        )
+        for i, img_url in enumerate(img_urls):
+            filepath = os.path.join(dest_dir, f'img{i}')
+            urllib.request.urlretrieve(
+                img_url, filepath, print(f'Retrieving {img_url}')
+                )
+            f.write(f'<img src="img{i}">')
+        f.write(
+            '\n'
+            '</body>\n'
+            '</html>\n'
+        )
     pass
 
 
